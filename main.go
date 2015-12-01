@@ -8,7 +8,7 @@ import (
 
 func main() {
 	jenkinsAddr := "http://my-jenkins"
-	viewName := "Local projects"
+	viewName := "my view"
 
 	jenkins, err := gojenkins.CreateJenkins(jenkinsAddr).Init()
 	if err != nil {
@@ -22,22 +22,21 @@ func main() {
 			isOk := true
 			for i := range jobs {
 				if jobs[i].Color == "red" {
-					fmt.Println(jobs[i].Name, " поломано")
+					fmt.Println(jobs[i].Name, " is broken")
 					isOk = false
 					break
 				}
 			}
 			if isOk {
-				fmt.Println("Всё хорошо")
-				// Зажечь зелёный
+				fmt.Println("Everything is OK")
+				// Turn green light on
 			} else {
-				// fmt.Println("Что-то сломалось")
-				// Зажечь красный
+				// Turn red light on
 			}
 		}
 	}
 	if err != nil {
-		fmt.Println("Что-то пошло не так")
-		// Зажечь жёлтый
+		fmt.Println("Somethin went wrong")
+		// Turn yellow light on
 	}
 }
