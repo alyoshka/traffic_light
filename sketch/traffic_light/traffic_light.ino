@@ -2,9 +2,10 @@ const int RED = 8;
 const int YELLOW = 7;
 const int GREEN = 6;
 
-boolean YELLOW_BLINKING = false;
+boolean YELLOW_BLINKING;
 
 void offAll() {
+  YELLOW_BLINKING = false;
   digitalWrite(RED, LOW);
   digitalWrite(YELLOW, LOW);
   digitalWrite(GREEN, LOW);
@@ -19,6 +20,7 @@ void on(int led) {
 }
 
 void setup() {
+  YELLOW_BLINKING = false;
   // initialize the digital pin as an output.
   pinMode(RED, OUTPUT);
   pinMode(YELLOW, OUTPUT);
@@ -28,10 +30,11 @@ void setup() {
 }
 
 void loop() {
-    if(YELLOW_BLINKING) {
+    if(YELLOW_BLINKING == true) {
       on(YELLOW);
       delay(500);
       off(YELLOW);
+      delay(500);
     }
 }
 
@@ -51,7 +54,12 @@ void serialEvent() {
         break;
       case 'y':
         offAll();
-        YELLOW_BLINKING = YELLOW_BLINKING ? false : true;
+        if(YELLOW_BLINKING == true) {
+          YELLOW_BLINKING = false;
+        } else {
+          YELLOW_BLINKING = true;
+        }
+        break;
       case 'G':
         offAll();
         on(GREEN);
