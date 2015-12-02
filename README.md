@@ -5,3 +5,7 @@ Golang application to show your Jenkins view status by usb-connected traffic lig
 
 ## Usage
 go run main.go -jenkins=JENKINS_URL -view=VIEW_NAME -tty=TTY
+
+### Todo
+- Add sketch
+- Blink yellow light when building project
