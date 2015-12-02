@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	
+
 	"github.com/bndr/gojenkins"
-	
+
 	"github.com/alyoshka/traffic_light"
 )
 
@@ -13,10 +13,9 @@ var jenkins = flag.String("jenkins", "localhost:8080", "url of jenkins")
 var view = flag.String("view", "my view", "name of view")
 var tty = flag.String("tty", "/dev/tty/ACM0", "tty where to write commands for arduino")
 
-
 func main() {
 	flag.Parse()
-	
+
 	trafficLight := tl.NewTrafficLightImpl(*tty)
 
 	jenkins, err := gojenkins.CreateJenkins(*jenkins).Init()
@@ -28,15 +27,23 @@ func main() {
 			fmt.Println("Failed to get views: ", err)
 		} else {
 			jobs := view.GetJobs()
+			isRunning := false
 			isOk := true
 			for i := range jobs {
-				if jobs[i].Color == "red" {
+				if jobs[i].Color == "blue_anime" {
+					fmt.Println(jobs[i].Name, " is running")
+					isRunning = true
+					break
+				} else if jobs[i].Color == "red" {
 					fmt.Println(jobs[i].Name, " is broken")
 					isOk = false
 					break
 				}
 			}
-			if isOk {
+			if isRunning {
+				fmt.Println("Building")
+				trafficLight.Blink()
+			} else if isOk {
 				fmt.Println("Everything is OK")
 				// Turn green light on
 				trafficLight.Green()

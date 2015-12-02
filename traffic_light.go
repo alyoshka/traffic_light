@@ -14,11 +14,15 @@ const GREEN = "G"
 // YELLOW - command for turning yellow light on
 const YELLOW = "Y"
 
+// BLINK - command for blinking yellow light
+const BLINK = "y"
+
 // TrafficLight - interface for communicating with arduino
 type TrafficLight interface {
 	Red()
 	Yellow()
 	Green()
+	Blink()
 }
 
 // TrafficLightImpl - implementation of traffic light interface
@@ -54,4 +58,9 @@ func (t *TrafficLightImpl) Yellow() {
 // Green - set green light on
 func (t *TrafficLightImpl) Green() {
 	t.send([]byte(GREEN))
+}
+
+// Blink - blink yellow light
+func (t *TrafficLightImpl) Blink() {
+	t.send([]byte(BLINK))
 }
