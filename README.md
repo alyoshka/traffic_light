@@ -3,5 +3,5 @@ Golang application to show your Jenkins view status by usb-connected traffic lig
 - **app** directory contains desctop-side code
 - **sketch** directory contains code for arduino
 
-= Usage
+## Usage
 go run main.go -jenkins=JENKINS_URL -view=VIEW_NAME -tty=TTY
