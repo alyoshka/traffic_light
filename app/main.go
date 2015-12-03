@@ -31,25 +31,25 @@ func main() {
 			isOk := true
 			for i := range jobs {
 				if jobs[i].Color == "blue_anime" {
-					fmt.Println(jobs[i].Name, " is running")
+					// fmt.Println(jobs[i].Name, " is running")
 					isRunning = true
-					break
 				} else if jobs[i].Color == "red" {
-					fmt.Println(jobs[i].Name, " is broken")
+					// fmt.Println(jobs[i].Name, " is broken")
 					isOk = false
 					break
 				}
 			}
-			if isRunning {
+			if !isOk {
+				// Turn red light on
+				trafficLight.Red()
+			} else if isRunning {
 				fmt.Println("Building")
+				// Turn the yellow blinking on
 				trafficLight.Blink()
-			} else if isOk {
+			} else {
 				fmt.Println("Everything is OK")
 				// Turn green light on
 				trafficLight.Green()
-			} else {
-				// Turn red light on
-				trafficLight.Red()
 			}
 		}
 	}
