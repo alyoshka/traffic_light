@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 
 	"github.com/bndr/gojenkins"
 
-	"github.com/alyoshka/traffic_light"
+	"github.com/alyoshka/traffic_light/app/traffic_light"
 )
 
 var jenkins = flag.String("jenkins", "localhost:8080", "url of jenkins")
@@ -16,46 +16,41 @@ var tty = flag.String("tty", "/dev/tty/ACM0", "tty where to write commands for a
 func main() {
 	flag.Parse()
 
-	trafficLight := tl.NewTrafficLightImpl(*tty)
+	trafficLight := trafficlight.NewTrafficLightTTY(*tty)
 
 	jenkins, err := gojenkins.CreateJenkins(*jenkins).Init()
 	if err != nil {
-		fmt.Println("Failed to create jenkins: ", err)
-	} else {
-		view, err := jenkins.GetView(*view)
-		if err != nil {
-			fmt.Println("Failed to get views: ", err)
-		} else {
-			jobs := view.GetJobs()
-			isRunning := false
-			isOk := true
-			for i := range jobs {
-				if jobs[i].Color == "blue_anime" {
-					// fmt.Println(jobs[i].Name, " is running")
-					isRunning = true
-				} else if jobs[i].Color == "red" {
-					// fmt.Println(jobs[i].Name, " is broken")
-					isOk = false
-					break
-				}
-			}
-			if !isOk {
-				// Turn red light on
-				trafficLight.Red()
-			} else if isRunning {
-				fmt.Println("Building")
-				// Turn the yellow blinking on
-				trafficLight.Blink()
-			} else {
-				fmt.Println("Everything is OK")
-				// Turn green light on
-				trafficLight.Green()
-			}
+		trafficLight.Yellow()
+		log.Panic("Failed to init jenkins: ", err)
+	}
+
+	view, err := jenkins.GetView(*view)
+	if err != nil {
+		trafficLight.Yellow()
+		log.Panic("Failed to get views: ", err)
+	}
+
+	jobs := view.GetJobs()
+	isRunning := false
+	isOk := true
+	for i := range jobs {
+		switch jobs[i].Color {
+		case "blue_anime":
+			isRunning = true
+		case "red":
+			isOk = false
+			break
 		}
 	}
-	if err != nil {
-		fmt.Println("Somethin went wrong")
-		// Turn yellow light on
-		trafficLight.Yellow()
+	switch {
+	case !isOk:
+		// something broken
+		trafficLight.Red()
+	case isRunning:
+		// build in progress
+		trafficLight.Blink()
+	default:
+		// everything is OK
+		trafficLight.Green()
 	}
 }
