@@ -4,7 +4,5 @@ Golang application to show your Jenkins view status by usb-connected traffic lig
 - **sketch** directory contains code for arduino
 
 ## Usage
-go run main.go -jenkins=JENKINS_URL -view=VIEW_NAME -tty=TTY
-
-### TODO
-- ?
+go build -o traffic_light app/main.go
+./traffic_light -jenkins=JENKINS_URL -view=VIEW_NAME -tty=TTY
